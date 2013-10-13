@@ -18,6 +18,8 @@ insert into givenNames
 
 select * from givenNames;
 
+select 1;
+
 /*
 select 
 union
