@@ -1,6 +1,6 @@
 use test;
 
-set @rowsToGenerate := 20;
+set @rowsToGenerate := 200;
 set @seed := 1;
 
 drop temporary table if exists givenName;
@@ -46,14 +46,17 @@ inner join	(-- the generator
 						,floor(1 + rand(@seed) * @count) num
 
 			from		(select @row := 0) v1
-			cross join	information_schema.columns	c1
-			cross join	information_schema.columns	c2
+			cross join	information_schema.columns	c1	-- 590
+			cross join	information_schema.columns	c2	-- 348,100
+			cross join	information_schema.columns	c3	-- 205,379,000
 
-			limit 200
+			where		@row < @rowsToGenerate
+
 			) gen on gen.num = gn.givennameID
 
-
 order by	row;
+
+
 
 
 -- select		 @row := @row + 1	row
@@ -65,12 +68,6 @@ order by	row;
 
 -- limit 200
 
-
-
--- select	@row := @row + 1
-
--- from 	(select @row := 1) rg
--- limit 20;
 
 
 /*
