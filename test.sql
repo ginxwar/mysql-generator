@@ -1,5 +1,6 @@
 use test;
 
+
 set @rowsToGenerate := 200;
 set @seed := 1;
 
@@ -46,9 +47,10 @@ inner join	(-- the generator
 						,floor(1 + rand(@seed) * @count) num
 
 			from		(select @row := 0) v1
-			cross join	information_schema.columns	c1	-- 590
-			cross join	information_schema.columns	c2	-- 348,100
-			cross join	information_schema.columns	c3	-- 205,379,000
+			cross join	(select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9 union select 10)	c1	-- 10
+			cross join	(select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9 union select 10)	c2	-- 100
+			cross join	(select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9 union select 10)	c3	-- 1000
+			cross join	(select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9 union select 10)	c4	-- 10000
 
 			where		@row < @rowsToGenerate
 
