@@ -38,13 +38,19 @@ set @count := (select count(*) from givenNames);
 
 
 
-select		gen.row, gn.*
+select		 gen.row
+			,gen.dateCreated
+
+			,gn.*
 
 from		givenNames	gn
 
-inner join	(-- the generator
+inner join	(-- generators
 			select		 @row := @row + 1	row
-						,floor(1 + rand(@seed) * @count) num
+						,floor(1 + rand(@seed) * @count) numGenerated
+
+						-- generates a date (this is here because rand seed is preserved, outside of this join would result in un-duplicated values)
+						,from_unixtime(floor(946684800 + rand(@seed) * 1209600)) dateCreated	-- epoch 20000101 through 20000115
 
 			from		(select @row := 0) v1
 			cross join	(select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9 union select 10)	c1	-- 10
@@ -54,7 +60,7 @@ inner join	(-- the generator
 
 			where		@row < @rowsToGenerate
 
-			) gen on gen.num = gn.givennameID
+			) gen on gen.numGenerated = gn.givennameID
 
 order by	row;
 
